@@ -9,6 +9,10 @@ class TaskManagerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+        scaffoldBackgroundColor: Colors.grey[200],
+      ),
       home: TaskListScreen(),
     );
   }
@@ -70,7 +74,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Task Manager')),
+      appBar: AppBar(
+        title: Text('Task Manager'),
+        backgroundColor: Colors.blueGrey[700],
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -80,9 +87,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 Expanded(
                   child: TextField(
                     controller: _taskController,
-                    decoration: InputDecoration(labelText: 'Enter Task'),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Task',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
                   ),
                 ),
+                SizedBox(width: 10),
                 DropdownButton<String>(
                   value: _selectedPriority,
                   items: ['Low', 'Medium', 'High']
@@ -97,31 +112,45 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     });
                   },
                 ),
-                IconButton(
-                  icon: Icon(Icons.add),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
                   onPressed: _addTask,
+                  child: Icon(Icons.add, color: Colors.white),
                 ),
               ],
             ),
+            SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
                   final task = _tasks[index];
-                  return ListTile(
-                    leading: Checkbox(
-                      value: task.isCompleted,
-                      onChanged: (value) => _toggleTaskCompletion(index),
-                    ),
-                    title: Text(task.name,
+                  return Card(
+                    color: task.isCompleted ? Colors.green[100] : Colors.white,
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: task.isCompleted,
+                        onChanged: (value) => _toggleTaskCompletion(index),
+                      ),
+                      title: Text(
+                        task.name,
                         style: TextStyle(
-                            decoration: task.isCompleted
-                                ? TextDecoration.lineThrough
-                                : null)),
-                    subtitle: Text('Priority: ${task.priority}'),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteTask(index),
+                          decoration: task.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
+                      ),
+                      subtitle: Text('Priority: ${task.priority}'),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteTask(index),
+                      ),
                     ),
                   );
                 },
